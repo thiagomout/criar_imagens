@@ -22,7 +22,8 @@ fundo_redimensionado = cv2.resize(fundo, (img.shape[1], img.shape[0]))
 img_cortada = cv2.bitwise_and(img, img, mask=mask)
 
 # Redimensionar a imagem cortada e a máscara
-escala = 0.1  # Ajustar o tamanho conforme necessário
+escala = input("Digite a escala da imagem cortada - Recomendado 0.1\n")
+escala = float(escala)
 largura = int(img_cortada.shape[1] * escala)
 altura = int(img_cortada.shape[0] * escala)
 dimensao = (largura, altura)
