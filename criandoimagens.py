@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import random
 
 # Carregar a imagem original e a imagem de fundo
 img = cv2.imread('/home/thiago/img_micra/MD022508_training_set/Planktic/MD022508-0-0-Planktic-0007.jpg')
@@ -11,30 +12,41 @@ gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 # Criar a máscara binária
 _, mask = cv2.threshold(gray, 128, 255, cv2.THRESH_BINARY)
 
-# Inverter a máscara para isolar o objeto (preservar o objeto)
+# Inverter a máscara para isolar o objeto
 mask_inverted = 255 - mask
 
-# Redimensionar a imagem de fundo para ser do mesmo tamanho que a original
+# Redimensionar a imagem de fundo para o tamanho da imagem original
 fundo_redimensionado = cv2.resize(fundo, (img.shape[1], img.shape[0]))
 
-# Isolar o objeto da imagem original usando a máscara invertida
+# Isolar o objeto da imagem original usando a máscara
 img_cortada = cv2.bitwise_and(img, img, mask=mask)
 
-# Aumentar o contraste do objeto recortado
-alpha = 1.0  # Contraste (1.0 = sem ajuste)
-beta = 0    # Brilho (0 = sem ajuste)
-img_cortada = cv2.convertScaleAbs(img_cortada, alpha=alpha, beta=beta)
+# Redimensionar a imagem cortada e a máscara
+escala = 0.1  # Ajustar o tamanho conforme necessário
+largura = int(img_cortada.shape[1] * escala)
+altura = int(img_cortada.shape[0] * escala)
+dimensao = (largura, altura)
+img_cortada_redimensionada = cv2.resize(img_cortada, dimensao)
+mask_resized = cv2.resize(mask, dimensao, interpolation=cv2.INTER_NEAREST)
+mask_inverted_resized = cv2.resize(mask_inverted, dimensao, interpolation=cv2.INTER_NEAREST)
 
-# Isolar o fundo onde o objeto será colado (máscara invertida)
-fundo_mascarado = cv2.bitwise_and(fundo_redimensionado, fundo_redimensionado, mask=mask_inverted)
+# Garantir que a máscara redimensionada tenha o mesmo número de canais que a imagem
+mask_resized_bgr = cv2.cvtColor(mask_resized, cv2.COLOR_GRAY2BGR)
+mask_inverted_resized_bgr = cv2.cvtColor(mask_inverted_resized, cv2.COLOR_GRAY2BGR)
 
-# Combinar o objeto isolado com o fundo modificado
-resultado_final = cv2.add(fundo_mascarado, img_cortada)
+# Definir a posição para colar a imagem cortada no fundo
+x_offset = random.randint(0, 366)
+y_offset = random.randint(0, 366)
+#x_offset, y_offset = 50, 50  # Ajustar conforme necessário
 
-# Salvar o resultado final
-cv2.imwrite('resultado_final.png', resultado_final)
+# Copiar a imagem cortada redimensionada para o fundo
+fundo_redimensionado[y_offset:y_offset + altura, x_offset:x_offset + largura] = cv2.bitwise_and(fundo_redimensionado[y_offset:y_offset + altura, x_offset:x_offset + largura], mask_inverted_resized_bgr)
+fundo_redimensionado[y_offset:y_offset + altura, x_offset:x_offset + largura] += img_cortada_redimensionada
+
+# Salvar a imagem
+cv2.imwrite('resultado_final.png', fundo_redimensionado)
 
 # Exibir o resultado final
-cv2.imshow("Resultado Final", resultado_final)
+cv2.imshow("Resultado Final", fundo_redimensionado)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
