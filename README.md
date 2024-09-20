@@ -1,10 +1,25 @@
-# criar_imagens
-Script em python para recortar o contorno de uma imagem e colar em outra
+# Criar Imagens
 
-## Como usar
+Um script em Python para recortar o contorno de uma imagem e colar em outra.
+
+## Como Usar
+
+1. Navegue até o diretório do projeto:
+    ```bash
+    cd criar_imagens
+    ```
+
+2. Execute o script:
+    ```bash
+    python3 criandoimagens.py
+    ```
+
+Quando executado, o programa perguntará a escala da imagem a ser colada. Recomendo usar `0.1` de acordo com meus testes, mas o valor pode variar de imagem para imagem.
+
+## Exemplo de Uso
+
+Aqui está um exemplo de como o script pode ser utilizado:
 
 ```bash
 cd criar_imagens
 python3 criandoimagens.py
-```
-Quando executado esse comando o progama te perguntará a escala da imagem a ser colada, recomendo 0.1 de acordo com meus testes, mas o valor irá variar de imagem para imagem.
