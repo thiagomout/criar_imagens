@@ -3,8 +3,11 @@ import numpy as np
 import random
 
 # Carregar a imagem original e a imagem de fundo
-img = cv2.imread('/home/thiago/img_micra/MD022508_training_set/Planktic/MD022508-0-0-Planktic-0007.jpg')
+img = cv2.imread('/home/thiago/img_micra/MD022508_training_set/Planktic/MD022508-0-0-Planktic-0005.jpg')
 fundo = cv2.imread('/home/thiago/img_micra/fundo/istockphoto-1209961067-612x612.jpg')
+
+#blur image
+img = cv2.GaussianBlur(img, (5, 5), 0)
 
 # Converter a imagem original para escala de cinza
 gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -22,7 +25,7 @@ fundo_redimensionado = cv2.resize(fundo, (img.shape[1], img.shape[0]))
 img_cortada = cv2.bitwise_and(img, img, mask=mask)
 
 # Redimensionar a imagem cortada e a máscara
-escala = input("Digite a escala da imagem cortada - Recomendado 0.1\n")
+escala = input("Digite a escala da imagem cortada - Recomendado 0.07\n")
 escala = float(escala)
 largura = int(img_cortada.shape[1] * escala)
 altura = int(img_cortada.shape[0] * escala)
