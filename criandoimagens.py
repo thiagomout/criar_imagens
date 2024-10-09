@@ -44,14 +44,15 @@ def criar_imagem():
     mask_inverted_resized_bgr = cv2.cvtColor(mask_inverted_resized, cv2.COLOR_GRAY2BGR)
 
     # Definir a posição para colar a imagem cortada no fundo
-    x_offset = random.randint(0, 366)
-    y_offset = random.randint(0, 366)
+    x_offset = random.randint(0, 319)
+    y_offset = random.randint(0, 319)
     #x_offset, y_offset = 50, 50  # Ajustar conforme necessário
     print(x_offset, y_offset)
 
     # Copiar a imagem cortada redimensionada para o fundo
     fundo_redimensionado[y_offset:y_offset + altura, x_offset:x_offset + largura] = cv2.bitwise_and(fundo_redimensionado[y_offset:y_offset + altura, x_offset:x_offset + largura], mask_inverted_resized_bgr)
     fundo_redimensionado[y_offset:y_offset + altura, x_offset:x_offset + largura] += img_cortada_redimensionada
+    print(fundo_redimensionado.shape)
 
     # Salvar a imagem
     cv2.imwrite('resultado_final2.png', fundo_redimensionado)
